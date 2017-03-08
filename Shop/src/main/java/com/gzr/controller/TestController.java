@@ -34,4 +34,9 @@ public class TestController {
         writer.println(list);
     }
 
+    @RequestMapping(value = "/sitemesh")
+    public String testSiteMesh(HttpServletResponse response) throws IOException {
+        return "sitetest";
+    }
+
 }

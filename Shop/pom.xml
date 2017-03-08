@@ -17,6 +17,8 @@
     <!-- log4j日志文件管理包版本 -->
     <slf4j.version>1.7.7</slf4j.version>
     <log4j.version>1.2.17</log4j.version>
+    <!--spring security-->
+    <spring.security.version>4.1.3.RELEASE</spring.security.version>
   </properties>
 
   <dependencies>
@@ -77,6 +79,30 @@
       <artifactId>spring-test</artifactId>
       <version>${spring.version}</version>
     </dependency>
+
+    <!-- spring security相关依赖 -->
+    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <version>${spring.security.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>${spring.security.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-taglibs</artifactId>
+      <version>${spring.security.version}</version>
+    </dependency>
+
+
+
+
     <!-- mybatis核心包 -->
     <dependency>
       <groupId>org.mybatis</groupId>
@@ -170,11 +196,18 @@
       <artifactId>commons-codec</artifactId>
       <version>1.9</version>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>5.2.4.Final</version>
+    </dependency>-->
+    <!-- https://mvnrepository.com/artifact/org.sitemesh/sitemesh -->
+    <dependency>
+      <groupId>org.sitemesh</groupId>
+      <artifactId>sitemesh</artifactId>
+      <version>3.0.1</version>
     </dependency>
+
   </dependencies>
   <build>
     <finalName>ShopPra1</finalName>

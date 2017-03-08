@@ -13,11 +13,11 @@
     <!-- 配置视图解析器 -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-        <property name="prefix" value="/WEB-INF/views/jsp"/>
+        <property name="prefix" value="/WEB-INF/views/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
     <!-- 静态资源的处理 -->
-    <mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>
+    <mvc:resources mapping="/static/**" location="/static/"/>
     <mvc:default-servlet-handler/>
 
     <!--文件上传 -->
