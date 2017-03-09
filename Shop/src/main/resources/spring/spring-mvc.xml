@@ -7,7 +7,17 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
    <!--开启自动配置-->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg ref="utf8Charset" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--全局解决springmvc的@ResponseBody中文问号问题-->
+    <bean id="utf8Charset" class="java.nio.charset.Charset" factory-method="forName">
+        <constructor-arg value="UTF-8" />
+    </bean>
     <!--扫描注解-->
     <context:component-scan base-package="com.gzr.controller"/>
     <!-- 配置视图解析器 -->

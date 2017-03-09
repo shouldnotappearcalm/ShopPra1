@@ -33,3 +33,7 @@ CREATE TABLE consumer (
 	`role` varchar(64) default 'consumer' COMMENT '账户身份',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+------用来测试功能  用户名是否存在
+insert into consumer(uid,username,password)
+values(null,'gzr01','1111');

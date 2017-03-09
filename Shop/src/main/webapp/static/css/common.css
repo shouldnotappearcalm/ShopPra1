@@ -23,7 +23,6 @@ html {
 	_height: 100%;
 	-webkit-text-size-adjust: none;
 	-ms-text-size-adjust: none;
-	_filter: expression(document.execCommand("BackgroundImageCache", false, true));
 }
 
 body {
@@ -32,7 +31,6 @@ body {
 	font: 12px tahoma, Arial, Verdana, sans-serif;
 	color: #666666;
 	background-color: #ffffff;
-	_background-image: url(about: blank);
 	_background-attachment: fixed;
 }
 
@@ -121,7 +119,6 @@ textarea {
 	position: fixed;
 	_position: absolute;
 	top: 0px;
-	_top: expression(documentElement.scrollTop + documentElement.clientHeight - this.offsetHeight);
 	left: 0px;
 	z-index: 99;
 	filter: alpha(opacity = 30);
@@ -678,7 +675,6 @@ div.xxMessage {
 	position: fixed;
 	_position: absolute;
 	top: 25%;
-	_top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(25 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + "px");
 	left: 50%;
 	z-index: 100;
 	overflow: hidden;
