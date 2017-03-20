@@ -54,7 +54,7 @@ public class Consumer {
     @Length(min = 2,max = 16,message = "{registValid.usernameLength}")
     private String username;
     @NotBlank(message ="{registValid.passwordBlank}")
-    @Pattern(regexp="/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$/", message="密码必须是6~18位数字和字母的组合")
+    @Pattern(regexp="(?!^\\d+$)(?!^[a-zA-Z]+$)(?!^[_#@+-/.?]+$).{6,18}"  , message="密码必须是6~18位数字字母的组合")
     private String password;
     @NotBlank(message ="{registValid.nameBlank}")
     private String name;
@@ -62,7 +62,7 @@ public class Consumer {
     @Email(message = "{registValid.emailFormat}")
     private String email;
     @NotBlank(message ="{registValid.phoneBlank}")
-    @Pattern(regexp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\\\d{8}$",message = "{registValid.phoneFormat}")
+    @Pattern(regexp = "^((13[0-9])|(15[^4])|(14[5,7])|(18[0,2,3,5-9])|(17[0-8]))\\d{8}$",message = "{registValid.phoneFormat}")
     private String phone;
     @NotBlank(message ="{registValid.addrBlank}")
     private String addr;

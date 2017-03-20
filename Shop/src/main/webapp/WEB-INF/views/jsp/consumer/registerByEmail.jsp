@@ -170,7 +170,7 @@
                             </th>
                             <td>
 										<span class="fieldSet">
-											<input type="text" id="checkcode" name="checkcode" class="text captcha" maxlength="4" autocomplete="off"><img id="checkImg" class="captchaImage" src="${pageContext.request.contextPath}/common/getCode.do" onclick="changeImage()" title="点击更换验证码">
+											<input type="text" id="checkcode" name="checkcode" class="text captcha" maxlength="5" autocomplete="off"><img id="checkImg" class="captchaImage" src="${pageContext.request.contextPath}/common/getCode.do" onclick="changeImage()" title="点击更换验证码">
 										</span>
                                 <span style="color:red">${errorMap.checkcode}</span>
                             </td>

@@ -63,7 +63,7 @@ public class ConsumerController {
              * 有错误返回false
              */
             boolean isCorrect=dealError(errors,errorMap,way);
-            //如果字段教研没错
+            //如果字段校验没错
             isCorrect=judgeImgCode(request.getSession(),request.getParameter("checkcode"),errorMap);
             log.info("isCorrect:"+isCorrect);
             if(!isCorrect){//验证有错误的情况
@@ -122,7 +122,7 @@ public class ConsumerController {
      * @return
      */
     public boolean judgeImgCode(HttpSession session,String code,Map<String,String> errorMap){
-        if(code.equals(session.getAttribute(Constants.CONSUMER_CHECK_CODE).toString().trim())){
+        if(code.equalsIgnoreCase(session.getAttribute(Constants.CONSUMER_CHECK_CODE).toString().trim())){
             return true;
         }else {
             errorMap.put("checkcode","验证码错误");

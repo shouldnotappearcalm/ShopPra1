@@ -13,7 +13,7 @@
     <link href="${pageContext.request.contextPath}/static/css/register.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery.validate.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/consumer.js"></script>
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         $(function(){
 
             $('#username').bind('input propertychange',function(){
@@ -88,7 +88,7 @@
                 }
             });
         });
-    </script>
+    </script>--%>
 </head>
 <body>
 <div class="container register">
@@ -175,7 +175,7 @@
                             <td>
                                 <span class="fieldSet">
                                     <input type="text" id="checkcode" name="checkcode" class="text captcha"
-                                           maxlength="4" autocomplete="off"><img id="checkImg"
+                                           maxlength="5" autocomplete="off"><img id="checkImg"
                                                                                  class="captchaImage"
                                                                                  src="${pageContext.request.contextPath}/common/getCode.do"
                                                                                  onclick="changeImage()"
