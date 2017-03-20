@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>会员注册</title>
+    <title>会员邮箱注册</title>
     <link href="${pageContext.request.contextPath}/static/css/register.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery.validate.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/consumer.js"></script>
@@ -49,12 +49,15 @@
                     },
                     addr:{
                         required:true
+                    },
+                    checkcode:{
+                        required:true
                     }
                 },
                 messages:{
                     username:{
                         required:"请填写用户名",
-                        minlength:"最小长度不能少于两个字符",
+                        minlength:"最小长度不能少于2个字符",
                         maxlength:"最大长度不能超过16个字符"
                     },
                     password:{
@@ -78,6 +81,9 @@
                     },
                     addr:{
                         required:"请输入正确地址"
+                    },
+                    checkcode:{
+                        required:"请输入图片验证码"
                     }
                 }
             });
@@ -92,14 +98,15 @@
                 <div class="title">
                     <strong>会员注册</strong>USER REGISTER
                 </div>
-                <form id="registerForm" action="${pageContext.request.contextPath }/user_regist.action"  method="post" novalidate="novalidate">
+                <form id="registerForm" action="${pageContext.request.contextPath }/consumer/email/register"  method="post" novalidate="novalidate">
                     <table>
                         <tbody><tr>
                             <th>
                                 <span class="requiredField">*</span>用户名:
                             </th>
                             <td>
-                                <input type="text" id="username" name="username" class="text" onblur="checkUserName()" maxlength="20">
+                                <input type="text" value="${consumer.username}" id="username" name="username" class="text" onblur="checkUserName()" maxlength="20">
+                                <span style="color:red">${errorMap.username}</span>
                                 <span id="HintSpan"></span>
                             </td>
                         </tr>
@@ -108,7 +115,8 @@
                                 <span class="requiredField">*</span>密&nbsp;&nbsp;码:
                             </th>
                             <td>
-                                <input type="password" id="password" name="password" class="text" maxlength="20" autocomplete="off">
+                                <input type="password" value="${consumer.password}"  id="password" name="password" class="text" maxlength="20" autocomplete="off">
+                                <span style="color:red">${errorMap.password}</span>
                             </td>
                         </tr>
                         <tr>
@@ -124,7 +132,8 @@
                                 <span class="requiredField">*</span>E-mail:
                             </th>
                             <td>
-                                <input type="text" id="email" name="email" class="text" maxlength="200">
+                                <input type="text" id="email" value="${consumer.email}"  name="email" class="text" maxlength="200">
+                                <span style="color:red">${errorMap.email}</span>
                             </td>
                         </tr>
                         <tr>
@@ -132,25 +141,27 @@
                                 姓名:
                             </th>
                             <td>
-                                <input type="text" name="name" class="text" maxlength="200">
+                                <input type="text" value="${consumer.name}"  name="name" class="text" maxlength="200">
+                                <span style="color:red">${errorMap.name}</span>
                             </td>
                         </tr>
 
-                        <tr>
+                        <%--<tr>
                             <th>
                                 电话:
                             </th>
                             <td>
                                 <input type="text" name="phone" class="text" />
                             </td>
-                        </tr>
+                        </tr>--%>
 
                         <tr>
                             <th>
                                 地址:
                             </th>
                             <td>
-                                <input type="text" name="addr" class="text" maxlength="200">
+                                <input type="text" name="addr"value="${consumer.addr}"  class="text" maxlength="200">
+                                <span style="color:red">${errorMap.addr}</span>
                             </td>
                         </tr>
                         <tr>
@@ -161,6 +172,7 @@
 										<span class="fieldSet">
 											<input type="text" id="checkcode" name="checkcode" class="text captcha" maxlength="4" autocomplete="off"><img id="checkImg" class="captchaImage" src="${pageContext.request.contextPath}/common/getCode.do" onclick="changeImage()" title="点击更换验证码">
 										</span>
+                                <span style="color:red">${errorMap.checkcode}</span>
                             </td>
                         </tr>
                         <tr>

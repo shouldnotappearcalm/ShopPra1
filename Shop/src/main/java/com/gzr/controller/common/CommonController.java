@@ -1,5 +1,6 @@
 package com.gzr.controller.common;
 
+import com.gzr.common.Constants;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,7 @@ public class CommonController {
             graphics.drawLine(x, y, x + xl, y + yl);
         }
         String code = getCodeString();
-        session.setAttribute("checkcode", code); // 写入session中
+        session.setAttribute(Constants.CONSUMER_CHECK_CODE, code); // 写入session中
         graphics.drawString(code, (int) (width * 0.1), (int) (height * 0.8));
         graphics.dispose();
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(response

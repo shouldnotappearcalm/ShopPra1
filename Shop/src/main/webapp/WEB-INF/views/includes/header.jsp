@@ -26,7 +26,7 @@
                 <a href="会员登录.htm">登录</a>|
             </li>
             <li id="headerRegister" class="headerRegister" style="display: list-item;">
-                <a href="会员注册.htm">注册</a>|
+                <a href="${pageContext.request.contextPath}/consumer/register">注册</a>|
             </li>
             <li id="headerUsername" class="headerUsername"></li>
             <li id="headerLogout" class="headerLogout">
@@ -57,7 +57,7 @@
 <div class="span24">
     <ul class="mainNav">
         <li>
-            <a href="../index.htm">首页</a>
+            <a href="${pageContext.request.contextPath}/index">首页</a>
             |
         </li>
         <li>
