@@ -6,5 +6,10 @@
     <select id="findByName" resultType="com.gzr.entity.Consumer" >
         select * from consumer where username=#{username}
     </select>
+
+    <insert id="registConusmerByEmail" parameterType="com.gzr.entity.Consumer">
+        insert into consumer(uid,username,password,name,email,addr,stage,code)
+        values(null,#{consumer.username},#{consumer.password},#{consumer.name},#{consumer.email},#{consumer.addr},#{consumer.stage},#{consumer.code})
+    </insert>
     
 </mapper>

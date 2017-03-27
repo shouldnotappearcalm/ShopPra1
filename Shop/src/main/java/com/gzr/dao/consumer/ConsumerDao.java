@@ -10,4 +10,6 @@ public interface ConsumerDao {
 
     public Consumer findByName(@Param("username")String username);
 
+    public int registConusmerByEmail(@Param("consumer")Consumer consumer);
+
 }

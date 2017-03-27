@@ -5,6 +5,7 @@ import com.gzr.entity.Consumer;
 import com.gzr.service.consumer.ConsumerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,10 +32,17 @@ public class ConsumerController {
     private Log log= LogFactory.getLog(this.getClass());
     @Resource
     private ConsumerService consumerService;
+    @Resource
+    private BCryptPasswordEncoder bcryptEncoder;
 
     @RequestMapping(value = "/{way}/register",method = RequestMethod.GET)
     public String registerPage(@PathVariable String way){
         return "phone".equals(way.trim())?"consumer/registerByPhone":"consumer/registerByEmail";
+    }
+
+    @RequestMapping(value = "/testPass")
+    public void test(String password){
+        log.error("pass:"+bcryptEncoder.encode(password));
     }
 
     @RequestMapping(value = "{way}/register",method = RequestMethod.POST)
@@ -63,8 +71,9 @@ public class ConsumerController {
              * 有错误返回false
              */
             boolean isCorrect=dealError(errors,errorMap,way);
-            //如果字段校验没错
+            //如果字段校验没错，校验验证码
             isCorrect=judgeImgCode(request.getSession(),request.getParameter("checkcode"),errorMap);
+            //校验验证码没错再校验用户名是否存在
             log.info("isCorrect:"+isCorrect);
             if(!isCorrect){//验证有错误的情况
                 log.info(errorMap);
@@ -73,8 +82,8 @@ public class ConsumerController {
                 return "phone".equals(way.trim())?"consumer/registerByPhone":"consumer/registerByEmail";
             }
             //正确的逻辑开始
-
-
+            consumer.setPassword(bcryptEncoder.encode(consumer.getPassword()));
+            consumerService.registConusmerByEmail(consumer);
             return "consumer/registerByPhone";
         }else{//验证没有错误
             return "redirect:/index.jsp";

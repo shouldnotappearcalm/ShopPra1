@@ -9,4 +9,6 @@ public interface ConsumerService {
 
     public Consumer findByName(String username);
 
+    public int registConusmerByEmail(Consumer consumer);
+
 }
