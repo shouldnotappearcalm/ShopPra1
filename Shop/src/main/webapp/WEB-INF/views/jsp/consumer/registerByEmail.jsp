@@ -10,9 +10,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>会员邮箱注册</title>
+    <link href="${pageContext.request.contextPath}/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="${pageContext.request.contextPath}/static/css/register.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery.validate.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/consumer.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(function(){
 
@@ -170,7 +172,7 @@
                             </th>
                             <td>
 										<span class="fieldSet">
-											<input type="text" id="checkcode" name="checkcode" class="text captcha" maxlength="5" autocomplete="off"><img id="checkImg" class="captchaImage" src="${pageContext.request.contextPath}/common/getCode.do" onclick="changeImage()" title="点击更换验证码">
+											<input type="text" id="checkcode" name="checkcode" class="text captcha" maxlength="5" autocomplete="off"><img id="checkImg" class="captchaImage" src="${pageContext.request.contextPath}/common/ConRegImgCode/getCode.do" onclick="changeImage()" title="点击更换验证码">
 										</span>
                                 <span style="color:red">${errorMap.checkcode}</span>
                             </td>

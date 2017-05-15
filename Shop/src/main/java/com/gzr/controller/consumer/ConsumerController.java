@@ -1,8 +1,24 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package com.gzr.controller.consumer;
 
 import com.gzr.common.Constants;
 import com.gzr.entity.Consumer;
+import com.gzr.exception.MsgSendFailException;
+import com.gzr.exception.RepeatDailyMsgException;
+import com.gzr.exception.RepeatSecondMsgException;
 import com.gzr.service.consumer.ConsumerService;
+import com.gzr.util.CommonUtils;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,24 +26,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by GZR on 2017/3/8.
  */
 @Controller
-@RequestMapping(value = "/consumer")
+@RequestMapping({"/consumer"})
 public class ConsumerController {
     private Log log= LogFactory.getLog(this.getClass());
     @Resource
@@ -72,10 +78,10 @@ public class ConsumerController {
              */
             boolean isCorrect=dealError(errors,errorMap,way);
             //如果字段校验没错，校验验证码
-            isCorrect=judgeImgCode(request.getSession(),request.getParameter("checkcode"),errorMap);
+            boolean isCorrectCode=judgeImgCode(request.getSession(),request.getParameter("checkcode"),errorMap);
             //校验验证码没错再校验用户名是否存在
             log.info("isCorrect:"+isCorrect);
-            if(!isCorrect){//验证有错误的情况
+            if(!isCorrect||!isCorrectCode){//验证有错误的情况
                 log.info(errorMap);
                 model.addAttribute("consumer",consumer);
                 model.addAttribute("errorMap",errorMap);
@@ -83,14 +89,39 @@ public class ConsumerController {
             }
             //正确的逻辑开始
             consumer.setPassword(bcryptEncoder.encode(consumer.getPassword()));
-            consumerService.registConusmerByEmail(consumer);
-            return "consumer/registerByPhone";
+            if("email".equals(way.trim())) {
+                int success=consumerService.registConusmerByEmail(consumer);
+                if(success>0){
+                    return "redirect:/index.jsp";
+                }
+                return "consumer/registerByEmail";
+            }else{
+                //手机注册的逻辑开始
+                //先判断手机号验证码是否正确
+                String code=consumerService.getPhoneCodeByNum(consumer.getPhone());
+                String phoneCode=request.getParameter("phoneCode").trim();
+                if(phoneCode==null||phoneCode==""||!phoneCode.equals(code.trim())){
+                    errorMap.put("phoneCode","验证码不正确");
+                    return "consumer/registerByPhone";
+                }
+                //正确逻辑开始写入数据
+                consumerService.registConusmerByPhone(consumer);
+                return "consumer/registerByPhone";
+            }
         }else{//验证没有错误
             return "redirect:/index.jsp";
         }
     }
 
-    @RequestMapping(value = "{username}/findByName",method = RequestMethod.GET)
+    @RequestMapping(value = "/email_activate")
+    public void emailActivateConsumer(String code){
+        log.error("activatecode:"+code);
+        //激活账户，改变数据库状态
+        consumerService.activateConsumerByEmail(code);
+        //暂定跳到登陆页面
+    }
+
+    @RequestMapping(value = "/{username}/findByName",method = RequestMethod.GET)
     @ResponseBody
     public String findConsumerByName(@PathVariable String username){
         Consumer consumer=consumerService.findByName(username);
@@ -100,6 +131,35 @@ public class ConsumerController {
         }else {
             return "<font color='red'>用户名已存在</font>";
         }
+    }
+
+    /**
+     *
+     * @param phoneNumber  发送的手机号
+     * @param phoneCheckCode 当前填写的验证码
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/sendPhoneMessage",method = RequestMethod.GET)
+    @ResponseBody
+    public String sendMessage(@RequestParam(value = "phoneNumber") String phoneNumber,@RequestParam(value="phoneCheckCode")String phoneCheckCode,HttpSession session,HttpServletRequest request){
+        log.info("success goto sendMessage");
+        if(session.getAttribute(Constants.PHONE_CHECK_CODE).toString().trim().equalsIgnoreCase(phoneCheckCode.trim())){
+            //验证码正确，发送短信
+            try {
+                consumerService.sendPhoneMessage(phoneNumber, CommonUtils.getIpAddr(request),request);
+            } catch (RepeatSecondMsgException e) {
+                return e.getMessage();
+            }catch (RepeatDailyMsgException e) {
+                return e.getMessage();
+            }catch (MsgSendFailException e) {
+                return e.getMessage();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "success";
+        }
+        return "验证码不正确";
     }
 
     /**
@@ -124,19 +184,12 @@ public class ConsumerController {
         return isCorrect;
     }
 
-    /**
-     * 判断session中存的验证码和当前页面提交过来的验证码是否一致
-     * @param session
-     * @param code
-     * @return
-     */
     public boolean judgeImgCode(HttpSession session,String code,Map<String,String> errorMap){
-        if(code.equalsIgnoreCase(session.getAttribute(Constants.CONSUMER_CHECK_CODE).toString().trim())){
+        if(session.getAttribute("img_code").toString().trim().equalsIgnoreCase(code.trim())) {
             return true;
         }else {
             errorMap.put("checkcode","验证码错误");
             return false;
         }
     }
-
 }

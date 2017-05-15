@@ -11,5 +11,23 @@
         insert into consumer(uid,username,password,name,email,addr,stage,code)
         values(null,#{consumer.username},#{consumer.password},#{consumer.name},#{consumer.email},#{consumer.addr},#{consumer.stage},#{consumer.code})
     </insert>
+
+    <insert id="registConusmerByPhone" parameterType="com.gzr.entity.Consumer">
+        insert into consumer(uid,username,password,name,phone,addr,stage,code)
+        values(null,#{consumer.username},#{consumer.password},#{consumer.name},#{consumer.phone},#{consumer.addr},#{consumer.stage},#{consumer.code})
+    </insert>
+    
+    <update id="activateConsumerByEmail">
+        update consumer set stage=1 where code=#{code}
+    </update>
+
+    <insert id="addSendMsgRecord">
+        insert into sendmsgrec(mobile,ip,type,sendTime,update_time)
+        values(#{mobile},#{ip},#{type},#{sendTime},now());
+    </insert>
+
+    <select id="getTodayTimesByPhone" resultType="int">
+        select count(*) from sendmsgrec where mobile=#{mobile} and sendTime=#{today}
+    </select>
     
 </mapper>

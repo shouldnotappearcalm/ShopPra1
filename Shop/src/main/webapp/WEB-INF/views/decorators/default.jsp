@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/static/css/slider.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/static/css/common.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/static/css/index.css'/>" />
-    <script type="text/javascript" src="<c:url value='/static/js/jquery-1.8.3.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/static/bootstrap-3.3.7-dist/js/jquery-1.11.1.js'/>"></script>
     <sitemesh:write property='head' />
 </head>
 <body>

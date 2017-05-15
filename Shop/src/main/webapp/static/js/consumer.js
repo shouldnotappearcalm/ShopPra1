@@ -38,5 +38,8 @@ function changeImage() {
     /* var img1 = document.getElementById("checkImg");
      console.log(new Date().getTime());
      img1.src="${pageContext.request.contextPath}/checkImg.action?"+new Date().getTime();*/
-    $('#checkImg').attr("src", "/shop/common/getCode.do?abc=" + new Date().getTime());
+    $('#checkImg').attr("src", "/shop/common/ConRegImgCode/getCode.do?abc=" + new Date().getTime());
+}
+function changePhoneImage() {
+    $('#checkPhoneImg').attr("src", "/shop/common/PhoneImgCode/getCode.do?abc=" + new Date().getTime());
 }

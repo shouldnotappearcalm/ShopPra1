@@ -1,43 +1,63 @@
 package com.gzr.util;
 
-import java.util.Date;
-import java.util.Properties;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * Created by GZR on 2017/3/26.
  */
 public class JamesSendMailUtil implements Runnable{
 
-    public static final String HOST="119.29.109.156";
-    public static final String PROTOCOL="smtp";
-    public static final int PORT=25;
-    public static final String FROM = "baofei'sdad@losergzr.cn";
-    public static final String PWD = "codemonkey";
-    public static final String IP = "localhost";
-    public static final String SERVER_PORT = "localhost";
-    public static final String PROJECT_NAME = "localhost";
-    public static final String ACTION_NAME = "user_active.do";
-    public String toEmail=null;
+    private String HOST="";
+    private String PROTOCOL="";
+    private int PORT;
+    private String FROM = "";
+    private String PWD = "";
+    private String IP = "";
+    private String SERVER_PORT = "";
+    private String PROJECT_NAME = "";
+    private String ACTION_NAME = "";
+    private String toEmail="";
+    private String code="";
 
     public JamesSendMailUtil(String toEmail) {
         this.toEmail = toEmail;
     }
 
+    public JamesSendMailUtil(String toEmail, String code) {
+        this.toEmail = toEmail;
+        this.code = code;
+    }
+
+    private void parameterPrepare(){
+        Properties prop=new Properties();
+        InputStream inputStream=Thread.currentThread().getContextClassLoader().getResourceAsStream("secret.properties");
+        try {
+            prop.load(inputStream);
+            HOST=prop.getProperty("email.host");
+            PROTOCOL=prop.getProperty("email.protocol");
+            PORT=Integer.parseInt(prop.getProperty("email.port"));
+            FROM=prop.getProperty("email.form");
+            PWD=prop.getProperty("email.password");
+            IP=prop.getProperty("email.ip");
+            SERVER_PORT=prop.getProperty("email.server_port");
+            PROJECT_NAME=prop.getProperty("email.project_name");
+            ACTION_NAME=prop.getProperty("email.action_name");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 
     /**
      * @return
      */
-    private static Session getSession() {
+    private  Session getSession() {
+        parameterPrepare();
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);
         props.put("mail.store.protocol" , PROTOCOL);
@@ -70,7 +90,7 @@ public class JamesSendMailUtil implements Runnable{
             msg.setRecipients(Message.RecipientType.TO, address);
             msg.setSubject("商城激活邮件");
             msg.setSentDate(new Date());
-            msg.setContent("<h1>欢饮注册成为网站会员!</h1><h3><a href='http://"+IP+":"+SERVER_PORT+"/"+PROJECT_NAME+"/"+ACTION_NAME+"?code="+"===code===="+"'>点击链接激活</a></h3>", "text/html;charset=UTF-8");
+            msg.setContent("<h1>欢饮注册成为gzr商城网站!</h1><h3><a target='_blank' href='http://"+IP+":"+SERVER_PORT+"/"+PROJECT_NAME+"/"+ACTION_NAME+"?code="+code+"'>点击此链接激活</a></h3>", "text/html;charset=UTF-8");
 
             //Send the message
             Transport.send(msg);
@@ -78,6 +98,14 @@ public class JamesSendMailUtil implements Runnable{
         catch (MessagingException mex) {
             mex.printStackTrace();
         }
+    }
+
+    public String getToEmail() {
+        return toEmail;
+    }
+
+    public void setToEmail(String toEmail) {
+        this.toEmail = toEmail;
     }
 
     @Override

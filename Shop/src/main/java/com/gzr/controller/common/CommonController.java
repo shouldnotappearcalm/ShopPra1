@@ -4,6 +4,7 @@ import com.gzr.common.Constants;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +21,16 @@ import java.util.Random;
 @RequestMapping(value = "/common")
 public class CommonController {
 
-    @RequestMapping(value = "/getCode")
+    @RequestMapping(value = "/{way}/getCode")
     // 产生登录验证码
-    public String getCode(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String getCode(HttpSession session, HttpServletRequest request, HttpServletResponse response,@PathVariable String way) throws Exception {
         response.setHeader("Cache-Control", "no-cache");
         int width = 75; // 图片宽度
         int height = 25; // 图片高度
+        if("PhoneImgCode".equals(way.trim())){
+            width=200;
+            height=40;
+        }
 
         // 生成前景和背景颜色，形成反色
         int red = (int) (Math.random() * 1000 % 64);
@@ -42,7 +47,12 @@ public class CommonController {
         graphics.setColor(backColor); // 背景颜色
         graphics.fillRect(0, 0, width, height);
 
-        graphics.setFont(new Font("Sans-Serif", Font.BOLD, 18));
+        int fontSize=18;
+        if(width>=200){
+            fontSize=25;
+        }
+
+        graphics.setFont(new Font("Sans-Serif", Font.BOLD, fontSize));
         //固定验证码颜色为绿色
         graphics.setColor(Color.GREEN); // 前景颜色
         Random random = new Random();//
@@ -55,7 +65,12 @@ public class CommonController {
             graphics.drawLine(x, y, x + xl, y + yl);
         }
         String code = getCodeString();
-        session.setAttribute(Constants.CONSUMER_CHECK_CODE, code); // 写入session中
+        //暂时这么写
+        if("PhoneImgCode".equals(way.trim())){
+            session.setAttribute(Constants.PHONE_CHECK_CODE, code); // 写入session中
+        }else{
+            session.setAttribute(Constants.IMG_CODE, code); // 写入session中
+        }
         graphics.drawString(code, (int) (width * 0.1), (int) (height * 0.8));
         graphics.dispose();
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(response

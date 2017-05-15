@@ -10,7 +10,8 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+    <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>
 
     <!-- 配置druid数据源 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
@@ -56,14 +57,10 @@
         <property name="basePackage" value="com.gzr.dao"/>
     </bean>
 
-    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
-    <bean id="transactionManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
+    <!--生成redisDao-->
+    <bean name="redisDao" class="com.gzr.dao.cache.RedisDao">
+        <constructor-arg name="ip" value="${redis.ip}"></constructor-arg>
+        <constructor-arg name="port" value="${redis.port}"></constructor-arg>
     </bean>
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
-    <context:component-scan base-package="com.gzr"></context:component-scan>
 
 </beans>

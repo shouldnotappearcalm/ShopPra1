@@ -1159,6 +1159,13 @@ $.extend( $.validator, {
 	},
 
 	methods: {
+		isMobile:function(value,element){
+			if(!(/^1[34578]\d{9}$/.test(value))){
+				//alert("手机号码有误，请重填");
+				return false;
+			}
+			return true;
+		},
 
 		// http://jqueryvalidation.org/required-method/
 		required: function( value, element, param ) {

@@ -21,6 +21,7 @@ public class JamesSendMailUtilTest {
     @Test
     public void test(){
         //taskExecutor.execute(new JamesSendMailUtil("1191465097@qq.com"));
+        new JamesSendMailUtil("15520497313@163.com").run();
         new JamesSendMailUtil("1191465097@qq.com").run();
     }
 

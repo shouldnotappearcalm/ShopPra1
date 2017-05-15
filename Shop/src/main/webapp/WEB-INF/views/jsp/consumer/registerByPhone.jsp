@@ -11,15 +11,20 @@
 <head>
     <title>会员注册</title>
     <link href="${pageContext.request.contextPath}/static/css/register.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery.validate.js"></script>
+    <link href="${pageContext.request.contextPath}/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/consumer.js"></script>
-    <%--<script type="text/javascript">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery.validate.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
         $(function(){
+
+            $('#phoneNumber').bind('input propertychange',function(){
+                $('#WritePhoneHint').text('');
+            });
 
             $('#username').bind('input propertychange',function(){
                 $('#HintSpan').text('');
             });
-
             var validate=$('#registerForm').validate({
                 focusInvalid: false, //当为false时，验证无效时，没有焦点响应
                 rules:{
@@ -37,15 +42,12 @@
                         required:true,
                         equalTo:'#password'
                     },
-                    email:{
-                        required:true,
-                        email:true
-                    },
                     name:{
                         required:true
                     },
                     phone:{
-                        required:true
+                        required:true,
+                        isMobile:true
                     },
                     addr:{
                         required:true
@@ -69,15 +71,13 @@
                         required:"请再次输入密码",
                         equalTo:"两次密码不一致"
                     },
-                    email:{
-                        required:"请填写邮箱地址",
-                        email:"请填写正确的邮箱地址"
-                    },
+
                     name:{
                         required:"请填写真实姓名"
                     },
                     phone:{
-                        required:"请输入正确手机号码"
+                        required:"请输入正确手机号码",
+                        isMobile:"输入手机号格式有误"
                     },
                     addr:{
                         required:"请输入正确地址"
@@ -88,7 +88,7 @@
                 }
             });
         });
-    </script>--%>
+    </script>
 </head>
 <body>
 <div class="container register">
@@ -154,11 +154,46 @@
                                 电话:
                             </th>
                             <td>
-                                <input type="text" name="phone" value="${consumer.phone}" class="text"/>
-                                <span style="color:red">${errorMap.phone}</span>
+                                <input type="text" id="phoneNumber" name="phone" value="${consumer.phone}" class="text"/>
+                                <span id="WritePhoneHint" style="color:red">${errorMap.phone}</span>
+                                <!-- 模态框（Modal） -->
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" style="width:450px;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title" id="myModalLabel">输入图中验证码</h4>
+                                            </div>
+                                            <div class="modal-body" style="padding: 0px;">
+                                                <div class="input-group">
+                                                    <input type="text" id="phoneCheckCode" class="form-control" placeholder="验证码" style="display:inline;width: 200px;height: 40px;margin-right: 0px;" />
+                                                    <img id="checkPhoneImg" style="width:200px;height:40px;margin-bottom: auto;margin-top: auto;margin-left: 0px;" class="captchaImage"
+                                                         src="${pageContext.request.contextPath}/common/PhoneImgCode/getCode.do"  onclick="changePhoneImage()" title="点击更换验证码">
+                                                </div>
+                                                <div class="input-group">
+                                                    <span style="margin-left: 2px;" id="PhoneHintSpan"></span>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                                <button type="button" class="btn btn-primary" onclick="sendPhoneMessage();">提交</button>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div>
                             </td>
                         </tr>
+                        <tr>
+                            <th>
+                                验证码
+                            </th>
+                            <td>
+                                <input type="text" style="margin-right: 0px;width:110px;" name="phoneCode" value="" class="text"/>
+                                <input type="button" id="sendMessageBtn" style="margin-left: 0px;width:110px;" value="发送验证码" onclick="showModal()" class="text"/>
+                                <span  style="color:red">${errorMap.phoneCode}</span>
+                            </td>
 
+                        </tr>
                         <tr>
                             <th>
                                 地址:
@@ -175,11 +210,8 @@
                             <td>
                                 <span class="fieldSet">
                                     <input type="text" id="checkcode" name="checkcode" class="text captcha"
-                                           maxlength="5" autocomplete="off"><img id="checkImg"
-                                                                                 class="captchaImage"
-                                                                                 src="${pageContext.request.contextPath}/common/getCode.do"
-                                                                                 onclick="changeImage()"
-                                                                                 title="点击更换验证码">
+                                           maxlength="5" autocomplete="off"><img id="checkImg" class="captchaImage"
+ src="${pageContext.request.contextPath}/common/ConRegImgCode/getCode.do"  onclick="changeImage()" title="点击更换验证码">
                                 </span>
                                 <span style="color:red">${errorMap.checkcode}</span>
                             </td>
@@ -189,7 +221,7 @@
 
                             </th>
                             <td>
-                                <input type="submit" class="submit" value="同意以下协议并注册">
+                                <input type="submit" style="width: auto" class="submit" value="同意以下协议并注册">
                             </td>
                         </tr>
                         <tr>
@@ -277,6 +309,77 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function  sendPhoneMessage() {
+        $('#PhoneHintSpan').html("");
+        //先判断验证码是否已经填写
+        var phoneCheckCode=$('#phoneCheckCode').val().trim();
+        if(phoneCheckCode==null||phoneCheckCode.length==0||phoneCheckCode==''){
+            $('#PhoneHintSpan').html("<font color='red'>验证码为空</font>");
+            return;
+        }
 
+        var phoneNumber=$('#phoneNumber').val().trim();
+        console.log('phone:'+phoneNumber);
+        //1.创建异步交互对象
+        var xhr = createXmlHttp();
+        //2.设计监听，触发回调函数
+        xhr.onreadystatechange = function () {
+            console.log(xhr.readyState + "," + xhr.status);
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    console.log(xhr.responseText);
+                    if(xhr.responseText=='success'){
+                        //发送短信成功的处理,关闭弹出框
+
+                        //调用验证码读秒事件
+                        setTime($('#sendMessageBtn'));
+                        $('#myModal').modal('hide');
+                    }else{
+                        $('#PhoneHintSpan').html("<font color='red'>"+xhr.responseText+"</font>");
+                    }
+                }
+            }
+        }
+        //3.打开链接,发送短信
+        xhr.open("GET", "/shop/consumer/sendPhoneMessage.do?phoneCheckCode="+phoneCheckCode+"&phoneNumber="+phoneNumber+"&time=" + new Date().getTime(), true);//true,异步
+        //4.发送
+        xhr.send(null);
+    }
+    function showModal(){
+        var mobile=$('#phoneNumber').val().trim();
+        if(!checkPhone(mobile)){
+            //手机号错误
+            $('#WritePhoneHint').html("<font color='red'>手机号填写写有误</font>")
+            return;
+        }
+        $('#myModal').modal('show');
+    }
+    
+    var countdown=120;
+    function setTime(obj) {
+        if (countdown == 0) {
+            $(obj).removeAttr("disabled");
+            $(obj).val("发送验证码");
+            countdown = 120;
+            return;
+        } else {
+            $(obj).attr("disabled", true);
+            $(obj).val("重新发送(" + countdown + ")");
+            countdown--;
+        }
+        setTimeout(function() {
+                    setTime(obj) }
+                ,1000)
+    }
+    function checkPhone(phone){
+        //var phone = document.getElementById('phone').value;
+        if(!(/^1[34578]\d{9}$/.test(phone))){
+            //alert("手机号码有误，请重填");
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>
