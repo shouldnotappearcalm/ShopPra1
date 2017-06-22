@@ -14,7 +14,6 @@
     <link rel="Shortcut Icon" href="<c:url value='/static/favicon/bitbug_favicon_48.ico'/>" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/static/css/slider.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/static/css/common.css'/>" />
-    <link rel="stylesheet" type="text/css" href="<c:url value='/static/css/index.css'/>" />
     <script type="text/javascript" src="<c:url value='/static/bootstrap-3.3.7-dist/js/jquery-1.11.1.js'/>"></script>
     <sitemesh:write property='head' />
 </head>

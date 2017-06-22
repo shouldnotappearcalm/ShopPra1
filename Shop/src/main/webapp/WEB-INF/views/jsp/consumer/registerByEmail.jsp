@@ -107,6 +107,7 @@
                                 <span class="requiredField">*</span>用户名:
                             </th>
                             <td>
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <input type="text" value="${consumer.username}" id="username" name="username" class="text" onblur="checkUserName()" maxlength="20">
                                 <span style="color:red">${errorMap.username}</span>
                                 <span id="HintSpan"></span>

@@ -14,4 +14,9 @@ public class IndexController {
         return "redirect:/index.jsp";
     }
 
+    @RequestMapping(value="/login")
+    public String login(){
+        return "login";
+    }
+
 }

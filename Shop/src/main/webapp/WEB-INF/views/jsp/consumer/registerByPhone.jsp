@@ -205,6 +205,7 @@
                         </tr>
                         <tr>
                             <th>
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <span class="requiredField">*</span>验证码:
                             </th>
                             <td>

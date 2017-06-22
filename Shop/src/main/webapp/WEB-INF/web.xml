@@ -91,6 +91,35 @@
   <listener>
     <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
   </listener>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring/spring-*.xml</param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+  <!-- Spring-security -->
+  <!--
+      DelegatingFilterProxy就是一个对于servlet filter的代理，用这个类的好处主要是通过spring容器来管理servlet filter的生命周期，
+      还有就是如果filter中需要一些Spring容器的实例，可以通过spring直接注入，
+      另外读取一些配置文件这些便利的操作都可以通过Spring来配置实现。
+
+
+      org.springframework.web.filter中有一个特殊的类——DelegatingFilterProxy，该类其实并不能说是一个过滤器，它的原型是FilterToBeanProxy，即将Filter作为spring的bean，由spring来管理。
+  -->
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>
+      org.springframework.web.filter.DelegatingFilterProxy
+    </filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <!--sitemesh装饰器放在spring security过滤器的后面，以免装饰器页中的security不起作用-->
   <filter>

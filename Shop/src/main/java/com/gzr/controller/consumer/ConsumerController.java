@@ -51,6 +51,11 @@ public class ConsumerController {
         log.error("pass:"+bcryptEncoder.encode(password));
     }
 
+    @RequestMapping(value = "/safe/11")
+    public String gotoSafe(){
+        return "consumer/safe/safe";
+    }
+
     @RequestMapping(value = "{way}/register",method = RequestMethod.POST)
     public String register(@Valid Consumer consumer, BindingResult result, @PathVariable String way, Model model, HttpServletRequest request){
         log.error(consumer.toString());
@@ -106,9 +111,13 @@ public class ConsumerController {
                 }
                 //正确逻辑开始写入数据
                 consumerService.registConusmerByPhone(consumer);
-                return "consumer/registerByPhone";
+                return "redirect:/index.jsp";
             }
         }else{//验证没有错误
+            /**
+             * 因为选择了邮箱和手机都提交到这一个方法，不会到这个else里面来，只是if里面进行一个
+             * 比较复杂点的判断
+             */
             return "redirect:/index.jsp";
         }
     }
